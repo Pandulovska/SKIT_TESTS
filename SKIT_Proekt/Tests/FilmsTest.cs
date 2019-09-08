@@ -13,9 +13,12 @@ namespace SKIT_Proekt.Tests
     {
         FilmsPage filmsPage;
         LoginPage loginPage;
+        RegisterPage registerPage;
         ArchivedFilmsPage archivedFilmsPage;
         SoonFilmsPage soonFilmsPage;
         BestFilmsPage bestFilmsPage;
+        ClientsPage clientsPage;
+        DetailsPage detailsPage;
         AddClientToMoviePage addClientToMoviePage;
         IWebDriver driver;
         WebDriverWait wait;
@@ -123,7 +126,7 @@ namespace SKIT_Proekt.Tests
         public void editFirstMovieGetTest()
         {
             adminLogin();
-            filmsPage.clickEditInRow(1);
+            filmsPage.adminClickEditInRow(1);
             string movieName = driver.FindElement(By.Id("Name")).GetAttribute("value");
             Assert.AreEqual("A Ghost Story", movieName);
         }
@@ -134,7 +137,7 @@ namespace SKIT_Proekt.Tests
         [TestMethod]
         public void editFirstMovieFailingTest() {
             adminLogin();
-            filmsPage.clickEditInRow(1);
+            filmsPage.adminClickEditInRow(1);
             driver.FindElement(By.Id("Name")).Clear();
             driver.FindElement(By.Id("Name")).Click();
             IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
@@ -152,7 +155,7 @@ namespace SKIT_Proekt.Tests
         public void editFirstMovieAndThenReturnTheOriginalName()
         {
             adminLogin();
-            filmsPage.clickEditInRow(1);
+            filmsPage.adminClickEditInRow(1);
             driver.FindElement(By.Id("Name")).Clear();
             driver.FindElement(By.Id("Name")).SendKeys("A GGhost Story");
             IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
@@ -160,11 +163,22 @@ namespace SKIT_Proekt.Tests
             string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
             Assert.AreEqual("A GGhost Story", firstMovieName);
 
-            filmsPage.clickEditInRow(1);
+            filmsPage.adminClickEditInRow(1);
             driver.FindElement(By.Id("Name")).Clear();
             driver.FindElement(By.Id("Name")).SendKeys("A Ghost Story");
             submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
             submitKey.Click();
+        }
+
+        //GET Films/Create
+        [Priority(11)]
+        [TestMethod]
+        public void getCreateFilm()
+        {
+            adminLogin();
+            filmsPage.clickCreateButton();
+            string text = driver.FindElement(By.XPath("/html/body/h2")).Text;
+            Assert.AreEqual(text, "Add a new movie");
         }
 
         //POST Test (failing path) - Films/Create
@@ -220,11 +234,97 @@ namespace SKIT_Proekt.Tests
         public void deleteFilmTest()
         {
             adminLogin();
-            filmsPage.clickDeleteInRow(1);
+            filmsPage.adminClickDeleteInRow(1);
             driver.SwitchTo().Alert().Accept();
             Thread.Sleep(500); //da ima vreme za da se izmeni tabelata
             string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
             Assert.AreEqual("A Ghost Story", firstMovieName);
+        }
+
+        [Priority(14)]
+        [TestMethod]
+        public void getDetailsForFirstFilm()
+        {
+            string url = "http://localhost:49683/Account/Login";
+            driver.Navigate().GoToUrl(url);
+            loginPage = new LoginPage(driver);
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
+            loginPage.login("user1@yahoo.com", "User1*");
+            wait.Until(wt => wt.FindElement(By.LinkText("user1@yahoo.com")));
+
+            driver.FindElement(By.LinkText("MOVIES")).Click();
+            FilmsPage filmsPage = new FilmsPage(driver);
+            
+            filmsPage.clickOnMovieToAccessDetailsFromPosition(1);
+            wait.Until(wt => wt.FindElement(By.XPath("/html/body/h2/u")));
+            string title = driver.FindElement(By.XPath("/html/body/h2/u")).Text;
+            Assert.AreEqual("Avengers: Infinity War", title);
+        }
+
+        [Priority(15)]
+        [TestMethod]
+        public void getDetailsForFifthFilm()
+        {
+            string url = "http://localhost:49683/Account/Login";
+            driver.Navigate().GoToUrl(url);
+            loginPage = new LoginPage(driver);
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
+            loginPage.login("user1@yahoo.com", "User1*");
+            wait.Until(wt => wt.FindElement(By.LinkText("user1@yahoo.com")));
+
+            driver.FindElement(By.LinkText("MOVIES")).Click();
+            FilmsPage filmsPage = new FilmsPage(driver);
+
+            filmsPage.clickOnMovieToAccessDetailsFromPosition(5);
+            wait.Until(wt => wt.FindElement(By.XPath("/html/body/h2/u")));
+            string title = driver.FindElement(By.XPath("/html/body/h2/u")).Text;
+            Assert.AreEqual("Incredibles 2", title);
+        }
+
+        [Priority(15)]
+        [TestMethod]
+        public void newClientRatesAFilm()
+        {
+            //create new user that will rate a film
+            driver.Navigate().GoToUrl("http://localhost:49683/Account/Register");
+            registerPage = new RegisterPage(driver);
+            registerPage.register("andrijana@test.com", "Test1!", "Test1!");
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
+            wait.Until(wt => wt.FindElement(By.LinkText("andrijana@test.com")));
+
+            driver.FindElement(By.LinkText("MOVIES")).Click();
+            filmsPage = new FilmsPage(driver);
+            filmsPage.clickOnMovieToAccessDetailsFromPosition(1);
+            detailsPage = new DetailsPage(driver);
+            float oldRating = detailsPage.getRating();
+            detailsPage.rateFilm(10);
+            Assert.AreEqual(detailsPage.getDoneMessage(), "Thank you for rating this movie!");
+            detailsPage.rateFilm(6);
+            Thread.Sleep(2000);
+            Assert.AreEqual(detailsPage.getDoneMessage(), "You have already rated this movie!");
+            float newRating = detailsPage.getRating();
+            Assert.AreNotEqual(oldRating, newRating);    
+            detailsPage.clickLogOut();
+
+            //admin deletes the new user
+            string loginURL = "http://localhost:49683/Account/Login";
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
+            driver.Navigate().GoToUrl(loginURL);
+            loginPage = new LoginPage(driver);
+            loginPage.login("admin2@yahoo.com", "Admin2*");
+            wait.Until(wt => wt.FindElement(By.LinkText("admin2@yahoo.com")));
+            string pageURL = "http://localhost:49683/Clients/";
+            driver.Navigate().GoToUrl(pageURL);
+            clientsPage = new ClientsPage(driver);
+            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            int numberRows = clientsPage.countRows();
+            clientsPage.deleteUserWithEmail("andrijana@test.com");
+            Thread.Sleep(1000);
+            IAlert alert = driver.SwitchTo().Alert();
+            alert.Accept();
+            Thread.Sleep(1000);
+            int newNumberRows = clientsPage.countRows();
+            Assert.AreEqual(numberRows - 1, newNumberRows);
         }
 
         [Priority(14)]

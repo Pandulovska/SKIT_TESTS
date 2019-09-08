@@ -79,14 +79,21 @@ namespace SKIT_Proekt.Pages
             return ret;
         }
 
-        public string getFieldFromRow(IWebElement row, int index)
+        public string getMovieNameFromPosition(int index)
         {
-            string xpath = string.Format("./td[{0}]", index);
-            string ret = row.FindElement(By.XPath(xpath)).Text;
+            string xpath = string.Format("./tbody/tr/td[{0}]/h5/a", index);
+            string ret = driver.FindElement(By.XPath(xpath)).Text;
             return ret;
         }
+
+        public void clickOnMovieToAccessDetailsFromPosition(int index)
+        {
+            IWebElement currentMovie = driver.FindElement(By.Name("film" + index));
+            currentMovie.Click();
+        }
+
         //=================Clicking a specific button in a specific row=================
-        public void clickEditInRow(int rowIndex)
+        public void adminClickEditInRow(int rowIndex)
         {
             IWebElement row = getAdminTableRow(rowIndex);
             IWebElement editButton = row.FindElement(By.XPath("./td[4]"))
@@ -94,7 +101,7 @@ namespace SKIT_Proekt.Pages
             editButton.Click();
         }
 
-        public void clickDetailsInRow(int rowIndex)
+        public void adminClickDetailsInRow(int rowIndex)
         {
             IWebElement row = getAdminTableRow(rowIndex);
             IWebElement detailsButton = row.FindElement(By.XPath("./td[4]"))
@@ -102,7 +109,7 @@ namespace SKIT_Proekt.Pages
             detailsButton.Click();
         }
 
-        public void clickDeleteInRow(int rowIndex)
+        public void adminClickDeleteInRow(int rowIndex)
         {
             IWebElement row = getAdminTableRow(rowIndex);
             IWebElement deleteButton = row.FindElement(By.XPath("./td[4]"))
