@@ -77,6 +77,7 @@
     <Compile Include="Tests\LogoutTest.cs" />
     <Compile Include="Tests\ClientsTest.cs" />
     <Compile Include="Tests\ManageUserTest.cs" />
+    <Compile Include="Tests\HomeTest.cs" />
     <Compile Include="Utils\DriverFactory.cs" />
   </ItemGroup>
   <ItemGroup>

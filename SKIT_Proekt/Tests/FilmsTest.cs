@@ -129,8 +129,25 @@ namespace SKIT_Proekt.Tests
         }
 
         //
-        //POST Test - Films/Edit
+        //POST Test (failing path) - Films/Edit
         [Priority(9)]
+        [TestMethod]
+        public void editFirstMovieFailingTest() {
+            adminLogin();
+            filmsPage.clickEditInRow(1);
+            driver.FindElement(By.Id("Name")).Clear();
+            driver.FindElement(By.Id("Name")).Click();
+            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
+            submitKey.Click();
+
+            //check if the proper error message displays
+            string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
+            Assert.AreEqual("The Name field is required.", nameErrorMessage);
+        }
+
+        //
+        //POST Test - Films/Edit
+        [Priority(10)]
         [TestMethod]
         public void editFirstMovieAndThenReturnTheOriginalName()
         {
@@ -150,15 +167,46 @@ namespace SKIT_Proekt.Tests
             submitKey.Click();
         }
 
-        //ne pominuva testot, treba site polinja da gi popolnish spored novata verzija
+        //POST Test (failing path) - Films/Create
+        [Priority(11)]
+        [TestMethod]
+        public void createFilmPostFailingTest() {
+            adminLogin();
+            filmsPage.clickCreateButton();
+
+            //fill out everything except Name and click submit, should fail
+            driver.FindElement(By.Id("Url")).SendKeys("A");
+            driver.FindElement(By.Id("Genre")).SendKeys("A");
+            driver.FindElement(By.Id("Director")).SendKeys("A");
+            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
+            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
+            driver.FindElement(By.Id("Stars")).SendKeys("A");
+            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
+            submitKey.Click();
+
+            //check if the proper error message displays
+            string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
+            Assert.AreEqual("The Name field is required.", nameErrorMessage);
+        }
+
+
         //POST Test - Films/Create
-        [Priority(10)]
+        [Priority(12)]
         [TestMethod]
         public void createFilmPostTest()
         {
             adminLogin();
             filmsPage.clickCreateButton();
+
+            //fill out all the fields
             driver.FindElement(By.Id("Name")).SendKeys("A");
+            driver.FindElement(By.Id("Url")).SendKeys("A");
+            driver.FindElement(By.Id("Genre")).SendKeys("A");
+            driver.FindElement(By.Id("Director")).SendKeys("A");
+            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
+            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
+            driver.FindElement(By.Id("Stars")).SendKeys("A");
+
             IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
             submitKey.Click();
             string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
@@ -167,7 +215,7 @@ namespace SKIT_Proekt.Tests
 
         //
         //DELETE Test - api/Films1/{id}
-        [Priority(11)]
+        [Priority(13)]
         [TestMethod]
         public void deleteFilmTest()
         {
@@ -179,7 +227,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
 
-        [Priority(12)]
+        [Priority(14)]
         [TestMethod]
         public void buyTicket()
         {
@@ -208,7 +256,7 @@ namespace SKIT_Proekt.Tests
         }
         
         //fali ne-happy path
-        [Priority(13)]
+        [Priority(15)]
         [TestMethod]
         public void buyTickets()
         {
