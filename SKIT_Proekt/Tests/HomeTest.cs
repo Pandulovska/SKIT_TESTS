@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
@@ -29,6 +30,10 @@ namespace SKIT_Proekt.Tests {
         [TestMethod]
         public void homeGetTest() {
             driver.FindElement(By.Id("carousel"));
+            ReadOnlyCollection<IWebElement> elements = driver.FindElements(By.TagName("img"));
+            Assert.AreEqual(elements[3].GetAttribute("src"), "http://localhost:49683/Content/4.jpg");
+            Assert.AreEqual(elements[5].GetAttribute("src"), "http://localhost:49683/Content/6.jpg");
+            Assert.AreEqual(elements[7].GetAttribute("src"), "http://localhost:49683/Content/3.jpg");
         }
 
         //

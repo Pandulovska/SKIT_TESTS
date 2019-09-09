@@ -22,7 +22,7 @@ namespace SKIT_Proekt.Tests {
             page = new RegisterPage(driver);
 
             string url = "http://localhost:49683/Account/Register";
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl(url);  // Go to /Account/Register
         }
 
         [TestCleanup]
@@ -43,21 +43,48 @@ namespace SKIT_Proekt.Tests {
 
         [Priority(2)]
         [TestMethod]
+        public void emptyEmailField()
+        {
+            page.register("", "123456", "123456");
+            string emailError = page.getEmailError();
+            Assert.AreEqual("The Email field is required.", emailError);
+        }
+
+        [Priority(3)]
+        [TestMethod]
+        public void emptyPasswordField()
+        {
+            page.register("test@test.com", "", "123456");
+            string passwordError = page.getConfirmPasswordError();
+            Assert.AreEqual("The password and confirmation password do not match.", passwordError);
+        }
+
+        [Priority(4)]
+        [TestMethod]
+        public void emptyConfirmPasswordField()
+        {
+            page.register("test@test.com", "123456", "");
+            string passwordError = page.getConfirmPasswordError();
+            Assert.AreEqual("The password and confirmation password do not match.", passwordError);
+        }
+
+        [Priority(5)]
+        [TestMethod]
         public void invalidEmailTest() {
             page.register("asd", "123456", "123456");
             string emailError = page.getEmailError();
             Assert.AreEqual("The Email field is not a valid e-mail address.", emailError);
         }
 
-        [Priority(3)]
+        [Priority(6)]
         [TestMethod]
         public void validEmailEmptyPasswordTest() {
             page.register("test@yahoo.com","","");
             string passwordError = page.getPasswordError();
             Assert.AreEqual("The Password field is required.", passwordError);
         }
-
-        [Priority(4)]
+        
+        [Priority(7)]
         [TestMethod]
         public void validEmailShortPasswordTest() {
             page.register("test@yahoo.com", "1", "1");
@@ -66,7 +93,7 @@ namespace SKIT_Proekt.Tests {
         }
 
 
-        [Priority(5)]
+        [Priority(8)]
         [TestMethod]
         public void validEmailLongPasswordLowerOnlyTest() {
             page.register("test@yahoo.com", "qwerty", "qwerty");
@@ -77,7 +104,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual(expectedMessage, passwordError);
         }
 
-        [Priority(6)]
+        [Priority(9)]
         [TestMethod]
         public void validEmailLongPasswordUpperOnlyTest() {
             page.register("test@yahoo.com", "QWERTY", "QWERTY");
@@ -88,7 +115,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual(expectedMessage, passwordError);
         }
 
-        [Priority(7)]
+        [Priority(10)]
         [TestMethod]
         public void validEmailLongPasswordLowerUpperTest() {
             page.register("test@yahoo.com", "Qwerty", "Qwerty");
@@ -98,7 +125,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual(expectedMessage, passwordError);
         }
 
-        [Priority(8)]
+        [Priority(11)]
         [TestMethod]
         public void validEmailLongPasswordLowerUpperSpecialTest() {
             page.register("test@yahoo.com", "Qwerty!", "Qwerty!");
@@ -107,7 +134,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual(expectedMessage, passwordError);
         }
 
-        [Priority(9)]
+        [Priority(12)]
         [TestMethod]
         public void validEmailValidPasswordNoMatchTest() {
             page.register("test@yahoo.com", "Qwerty1!", "Qwerty11");
@@ -116,7 +143,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual(expectedMessage, passwordError);
         }
 
-        [Priority(10)]
+        [Priority(13)]
         [TestMethod]
         public void successfulRegisterAndDeleteTest() {
             page.register("test@test.com", "Test1!","Test1!");

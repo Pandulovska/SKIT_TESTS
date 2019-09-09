@@ -69,7 +69,7 @@
     <Compile Include="Pages\ManagePage.cs" />
     <Compile Include="Pages\RegisterPage.cs" />
     <Compile Include="Pages\SoonFilmsPage.cs" />
-    <Compile Include="Tests\DetailsPage.cs" />
+    <Compile Include="Pages\DetailsPage.cs" />
     <Compile Include="Tests\FilmsTest.cs" />
     <Compile Include="Tests\ManageAdminTest.cs" />
     <Compile Include="Tests\LoginTest.cs" />

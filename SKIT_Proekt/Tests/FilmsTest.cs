@@ -39,7 +39,7 @@ namespace SKIT_Proekt.Tests
             driver = DriverFactory.createDriver();
             filmsPage = new FilmsPage(driver);
             string url = "http://localhost:49683/Films/Index";
-            driver.Navigate().GoToUrl(url);
+            driver.Navigate().GoToUrl(url); //Go to /Films/Index
         }
 
         [TestCleanup]
@@ -109,7 +109,7 @@ namespace SKIT_Proekt.Tests
         //GET Test - Films/BestMovies -> sort by Visitors
         [Priority(7)]
         [TestMethod]
-        public void getFirstBestMovieByVisitorsTest()
+        public void getSecondBestMovieByVisitorsTest()
         {
             driver.FindElement(By.LinkText("BEST MOVIES")).Click();
             bestFilmsPage = new BestFilmsPage(driver);
@@ -138,15 +138,35 @@ namespace SKIT_Proekt.Tests
         public void editFirstMovieFailingTest() {
             adminLogin();
             filmsPage.adminClickEditInRow(1);
+
             driver.FindElement(By.Id("Name")).Clear();
-            driver.FindElement(By.Id("Name")).Click();
+            driver.FindElement(By.Id("Url")).Clear();
+            driver.FindElement(By.Id("Genre")).Clear();
+            driver.FindElement(By.Id("Director")).Clear();
+            driver.FindElement(By.Id("ReleaseDate")).Clear();
+            driver.FindElement(By.Id("ShortDescription")).Clear();
+            driver.FindElement(By.Id("Stars")).Clear();
             IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
             submitKey.Click();
 
-            //check if the proper error message displays
+            //check if the proper error messages are displayed
             string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
+            string urlErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Url']")).Text;
+            string genreErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Genre']")).Text;
+            string directorErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Director']")).Text;
+            string releaseDateErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ReleaseDate']")).Text;
+            string shortDescriptionErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ShortDescription']")).Text;
+            string starsErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Stars']")).Text;
             Assert.AreEqual("The Name field is required.", nameErrorMessage);
+            Assert.AreEqual("The Image field is required.", urlErrorMessage);
+            Assert.AreEqual("The Genre field is required.", genreErrorMessage);
+            Assert.AreEqual("The Director field is required.", directorErrorMessage);
+            Assert.AreEqual("The Release Date field is required.", releaseDateErrorMessage);
+            Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
+            Assert.AreEqual("The Stars field is required.", starsErrorMessage);
         }
+        //[bug1] there is no complex validation for the fields (any entered data will pass), should we add test?
+
 
         //
         //POST Test - Films/Edit
@@ -182,30 +202,42 @@ namespace SKIT_Proekt.Tests
         }
 
         //POST Test (failing path) - Films/Create
-        [Priority(11)]
+        [Priority(12)]
         [TestMethod]
         public void createFilmPostFailingTest() {
             adminLogin();
             filmsPage.clickCreateButton();
-
-            //fill out everything except Name and click submit, should fail
-            driver.FindElement(By.Id("Url")).SendKeys("A");
-            driver.FindElement(By.Id("Genre")).SendKeys("A");
-            driver.FindElement(By.Id("Director")).SendKeys("A");
-            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
-            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
-            driver.FindElement(By.Id("Stars")).SendKeys("A");
+            //Sending empty strings to all fields
+            driver.FindElement(By.Id("Name")).SendKeys("");
+            driver.FindElement(By.Id("Url")).SendKeys("");
+            driver.FindElement(By.Id("Genre")).SendKeys("");
+            driver.FindElement(By.Id("Director")).SendKeys("");
+            driver.FindElement(By.Id("ReleaseDate")).SendKeys("");
+            driver.FindElement(By.Id("ShortDescription")).SendKeys("");
+            driver.FindElement(By.Id("Stars")).SendKeys("");
             IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
             submitKey.Click();
 
-            //check if the proper error message displays
+            //check if the proper error messages are displayed
             string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
+            string urlErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Url']")).Text;
+            string genreErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Genre']")).Text;
+            string directorErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Director']")).Text;
+            string releaseDateErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ReleaseDate']")).Text;
+            string shortDescriptionErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ShortDescription']")).Text;
+            string starsErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Stars']")).Text;
             Assert.AreEqual("The Name field is required.", nameErrorMessage);
+            Assert.AreEqual("The Image field is required.", urlErrorMessage);
+            Assert.AreEqual("The Genre field is required.", genreErrorMessage);
+            Assert.AreEqual("The Director field is required.", directorErrorMessage);
+            Assert.AreEqual("The Release Date field is required.", releaseDateErrorMessage);
+            Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
+            Assert.AreEqual("The Stars field is required.", starsErrorMessage);
         }
-
+        //[bug1] there is no complex validation for the fields (any entered data will pass), should we add test?
 
         //POST Test - Films/Create
-        [Priority(12)]
+        [Priority(13)]
         [TestMethod]
         public void createFilmPostTest()
         {
@@ -229,7 +261,7 @@ namespace SKIT_Proekt.Tests
 
         //
         //DELETE Test - api/Films1/{id}
-        [Priority(13)]
+        [Priority(14)]
         [TestMethod]
         public void deleteFilmTest()
         {
@@ -241,7 +273,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
 
-        [Priority(14)]
+        [Priority(15)]
         [TestMethod]
         public void getDetailsForFirstFilm()
         {
@@ -261,7 +293,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("Avengers: Infinity War", title);
         }
 
-        [Priority(15)]
+        [Priority(16)]
         [TestMethod]
         public void getDetailsForFifthFilm()
         {
@@ -281,7 +313,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("Incredibles 2", title);
         }
 
-        [Priority(15)]
+        [Priority(17)]
         [TestMethod]
         public void newClientRatesAFilm()
         {
@@ -327,7 +359,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual(numberRows - 1, newNumberRows);
         }
 
-        [Priority(14)]
+        [Priority(18)]
         [TestMethod]
         public void buyTicket()
         {
@@ -341,22 +373,35 @@ namespace SKIT_Proekt.Tests
             driver.FindElement(By.LinkText("MOVIES")).Click();
             FilmsPage filmsPage = new FilmsPage(driver);
             int points = filmsPage.getPoints();
-            if (points > 100)
-            {
-                points -= 101;
-            }
-
-            filmsPage.clickOnBuyTicketForTheFirstMovie();
+            
+            filmsPage.clickOnBuyTicketForTheFirstMovie(); //Go to /Films/AddClientToMovie/{id}
             addClientToMoviePage = new AddClientToMoviePage(driver);
             addClientToMoviePage.buyOneTicket("22-09-2019");
+            int newPoints = points + 10;
+            if (newPoints >= 50 && newPoints < 100)
+            {
+                Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift1");
+                driver.FindElement(By.LinkText("Accept the prize")).Click();
+                newPoints -= 50;
+            }
+            else if (newPoints == 100)
+            {
+                Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift2");
+                driver.FindElement(By.LinkText("Accept the prize")).Click();
+                newPoints -= 100;
+            }
+            else if (newPoints > 100)
+            {
+                Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift3");
+                newPoints -= 101;
+            }
             url = "http://localhost:49683/Films/Index";
             driver.Navigate().GoToUrl(url);
             int currentPoints = filmsPage.getPoints();
-            Assert.AreEqual(points + 10, currentPoints);
+            Assert.AreEqual(newPoints, currentPoints);
         }
         
-        //fali ne-happy path
-        [Priority(15)]
+        [Priority(19)]
         [TestMethod]
         public void buyTickets()
         {
@@ -370,18 +415,34 @@ namespace SKIT_Proekt.Tests
             url = "http://localhost:49683/Films/Index";
             driver.Navigate().GoToUrl(url);
             int points = filmsPage.getPoints();
-            if (points > 100)
-            {
-                points -= 101;
-            }
+          
             filmsPage.clickOnBuyTicketForTheSecondMovie();
-
             addClientToMoviePage = new AddClientToMoviePage(driver);
             addClientToMoviePage.buyTickets("25-09-2019",2);
+            int newPoints = points + 20;
+            if (newPoints >= 50 && newPoints < 100)
+            {
+                Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift1");
+                driver.FindElement(By.LinkText("Accept the prize")).Click();
+                newPoints -= 50;
+            }
+            else if (newPoints == 100)
+            {
+               Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift2");
+               driver.FindElement(By.LinkText("Accept the prize")).Click();
+               newPoints -= 100;
+            }
+            else if (newPoints > 100)
+            {                
+                Assert.AreEqual(driver.Url, "http://localhost:49683/Films/Gift3");
+                newPoints -= 101;
+            }
             url = "http://localhost:49683/Films/Index";
             driver.Navigate().GoToUrl(url);
             int currentPoints = filmsPage.getPoints();
-            Assert.AreEqual(points+20, currentPoints);
+            Assert.AreEqual(newPoints, currentPoints);
         }
+        //[bug2] weak validation for the fields: date (any string will pass) and No. tickets (any number will pass), should we add test?
+
     }
 }

@@ -26,18 +26,18 @@ namespace SKIT_Proekt.Tests {
             //=========================================================================================
             page = new ClientsPage(driver);
 
-            string pageURL = "http://localhost:49683/Clients/";
+            string pageURL = "http://localhost:49683/Clients/Index";
             string loginURL = "http://localhost:49683/Account/Login";
             loginPage = new LoginPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
 
             //Navigate to the Login page and login as admin
-            driver.Navigate().GoToUrl(loginURL);
+            driver.Navigate().GoToUrl(loginURL); // Go to /Account/Login
             loginPage.login("admin2@yahoo.com", "Admin2*");
             wait.Until(wt => wt.FindElement(By.LinkText("admin2@yahoo.com")));
 
             //Navigate to the Clients page once logged in
-            driver.Navigate().GoToUrl(pageURL);
+            driver.Navigate().GoToUrl(pageURL); // Go to /Clients/Index
         }
 
         [TestCleanup]
@@ -56,7 +56,7 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual("admin2@yahoo.com", actualText);
         }
 
-        //
+        //GET Clients/Edit
         //Click Edit on row with admin account
         [Priority(2)]
         [TestMethod]
@@ -89,7 +89,7 @@ namespace SKIT_Proekt.Tests {
         }
 
         //
-        //GET test - Users/Create
+        //GET test - Clients/Create
         [Priority(5)]
         [TestMethod]
         public void createClientGetTest() {
@@ -98,8 +98,8 @@ namespace SKIT_Proekt.Tests {
             Assert.AreEqual("Add client", titleText);
         }
 
-        //
-        //POST test - Users/Create  //ushte testovi so greshni params!!
+        //Considered only the happy path scenario, because the other scenarios are already part of RegisterTest
+        //POST test - Clients/Create  
         [Priority(6)]
         [TestMethod]
         public void createClientPostTest() {
@@ -112,6 +112,8 @@ namespace SKIT_Proekt.Tests {
             string newClientEmail = page.getFieldFromRow(page.getTableRow(3), 1);
             Assert.AreEqual("damjan@test.com", newClientEmail);
         }
+
+
 
         //Edit admin
         [Priority(7)]

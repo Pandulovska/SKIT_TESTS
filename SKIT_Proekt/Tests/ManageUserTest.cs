@@ -28,9 +28,9 @@ namespace SKIT_Proekt
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
             loginPage.login("user1@yahoo.com", "User1*");
             wait.Until(wt => wt.FindElement(By.LinkText("user1@yahoo.com")));
-            driver.FindElement(By.LinkText("user1@yahoo.com")).Click();
+            driver.FindElement(By.LinkText("user1@yahoo.com")).Click(); //Go to Manage/Index
             managePage = new ManagePage(driver);
-            managePage.goToChangePasswordPage();
+            managePage.goToChangePasswordPage();  //Go to Manage/ChangePassword
             changePasswordPage = new ChangePasswordPage(driver);
         }
 
