@@ -18,3 +18,23 @@ C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_Proekt - Copy\SKIT_Proekt\obj\Debug\SKIT
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_Proekt - Copy\SKIT_Proekt\obj\Debug\SKIT_Proekt.csproj.CopyComplete
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_Proekt - Copy\SKIT_Proekt\obj\Debug\SKIT_Proekt.dll
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_Proekt - Copy\SKIT_Proekt\obj\Debug\SKIT_Proekt.pdb
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\SKIT_Proekt.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\SKIT_Proekt.pdb
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Selenium.WebDriverBackedSelenium.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\WebDriver.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\WebDriver.Support.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.xml
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.xml
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\Selenium.WebDriverBackedSelenium.xml
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\WebDriver.xml
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\bin\Debug\WebDriver.Support.xml
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\obj\Debug\SKIT_Proekt.csprojAssemblyReference.cache
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\obj\Debug\SKIT_Proekt.csproj.CoreCompileInputs.cache
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\obj\Debug\SKIT_Proekt.csproj.CopyComplete
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\obj\Debug\SKIT_Proekt.dll
+C:\Users\PC\Desktop\SKIT_PROEKT_TESTOVI\SKIT_Proekt\obj\Debug\SKIT_Proekt.pdb

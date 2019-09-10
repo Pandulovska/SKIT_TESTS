@@ -444,5 +444,25 @@ namespace SKIT_Proekt.Tests
         }
         //[bug2] weak validation for the fields: date (any string will pass) and No. tickets (any number will pass), should we add test?
 
+        [Priority(20)]
+        [TestMethod]
+        public void createFilmFailingTest() {
+
+            adminLogin();
+            filmsPage.clickCreateButton();
+
+            //fill out all the fields
+            driver.FindElement(By.Id("Name")).SendKeys("A");
+            driver.FindElement(By.Id("Url")).SendKeys("A");
+            driver.FindElement(By.Id("Genre")).SendKeys("A");
+            driver.FindElement(By.Id("Director")).SendKeys("A");
+            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
+            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
+            driver.FindElement(By.Id("Stars")).SendKeys("A");
+
+            driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']")).Click();
+            string firstMovieName = filmsPage.getFilmNameFromPosition(1);
+            Assert.AreEqual("A Ghost Story", firstMovieName);
+        }
     }
 }
