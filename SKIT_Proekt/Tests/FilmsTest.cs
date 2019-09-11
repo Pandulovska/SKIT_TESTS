@@ -5,6 +5,7 @@ using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using SKIT_Proekt.Utils;
 using System.Threading;
+using System.Collections.ObjectModel;
 
 namespace SKIT_Proekt.Tests
 {
@@ -165,9 +166,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
             Assert.AreEqual("The Stars field is required.", starsErrorMessage);
         }
-        //[bug1] there is no complex validation for the fields (any entered data will pass), should we add test?
-
-
+        
         //
         //POST Test - Films/Edit
         [Priority(10)]
@@ -234,8 +233,7 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
             Assert.AreEqual("The Stars field is required.", starsErrorMessage);
         }
-        //[bug1] there is no complex validation for the fields (any entered data will pass), should we add test?
-
+       
         //POST Test - Films/Create
         [Priority(13)]
         [TestMethod]
@@ -442,8 +440,8 @@ namespace SKIT_Proekt.Tests
             int currentPoints = filmsPage.getPoints();
             Assert.AreEqual(newPoints, currentPoints);
         }
-        //[bug2] weak validation for the fields: date (any string will pass) and No. tickets (any number will pass), should we add test?
 
+        //[bug1] there is no complex validation for the fields (any entered data will pass while creating and editing a film)
         [Priority(20)]
         [TestMethod]
         public void createFilmFailingTest() {
@@ -464,5 +462,40 @@ namespace SKIT_Proekt.Tests
             string firstMovieName = filmsPage.getFilmNameFromPosition(1);
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
+
+        //[bug2] weak validation for the fields: date (any string will pass) and No. tickets (any number will pass), should we add test?
+        [Priority(21)]
+        [TestMethod]
+        public void buyTicketFailingTest()
+        {
+            string url = "http://localhost:49683/Account/Login";
+            driver.Navigate().GoToUrl(url);
+            loginPage = new LoginPage(driver);
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
+            loginPage.login("user1@yahoo.com", "User1*");
+            wait.Until(wt => wt.FindElement(By.LinkText("user1@yahoo.com")));
+
+            url = "http://localhost:49683/Films/Index";
+            driver.Navigate().GoToUrl(url);
+            int points = filmsPage.getPoints();
+
+            filmsPage.clickOnBuyTicketForTheSecondMovie();
+            addClientToMoviePage = new AddClientToMoviePage(driver);
+            addClientToMoviePage.buyTickets("2019-02-25", 0);
+
+            driver.FindElement(By.LinkText("MY TICKETS")).Click();
+            ReadOnlyCollection<IWebElement> tickets = driver.FindElements(By.ClassName("ticket"));
+            int flag = 0;
+            foreach(IWebElement ticket in tickets)
+            {
+                if (ticket.Text.Contains("2019-02-25\r\n") && ticket.Text.Contains("Number of tickets: 0"))
+                {
+                    flag = 1; break;
+                }
+            }
+
+            Assert.AreEqual(flag, 0);
+        }
+
     }
 }
