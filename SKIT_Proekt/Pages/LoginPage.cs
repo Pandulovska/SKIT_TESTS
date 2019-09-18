@@ -13,6 +13,8 @@ namespace SKIT_Proekt.Pages
         By LoginBtn = By.Id("login");
         By LogOutBtn = By.Id("logout");
         By loginErrorXPath = By.XPath("//*[@id='loginForm']/form/div[1]/ul/li");
+        By emailErrorXPath = By.XPath("//*[@id='loginForm']/form/div[1]/div/span/span");
+        By passwordErrorXPath = By.XPath("//*[@id='loginForm']/form/div[2]/div/span/span");
 
         public LoginPage(IWebDriver driver)
         {
@@ -63,7 +65,27 @@ namespace SKIT_Proekt.Pages
         }
         public void waitForError()
         {
-        wait.Until(wt => wt.FindElement(loginErrorXPath));
+            wait.Until(wt => wt.FindElement(loginErrorXPath));
+        }
+
+        public void waitForEmailError()
+        {
+            wait.Until(wt => wt.FindElement(emailErrorXPath));
+        }
+
+        public string getEmailError()
+        {
+            return driver.FindElement(emailErrorXPath).Text;
+        }
+
+        public void waitForPasswordError()
+        {
+            wait.Until(wt => wt.FindElement(passwordErrorXPath));
+        }
+
+        public string getPasswordError()
+        {
+            return driver.FindElement(passwordErrorXPath).Text;
         }
     }
 }

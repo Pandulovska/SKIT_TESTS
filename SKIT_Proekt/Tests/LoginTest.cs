@@ -51,13 +51,11 @@ namespace SKIT_Proekt
         public void EmptyParams()
         {          
             loginPage.login("", "");
-            string emailErrorXPath = "//*[@id='loginForm']/form/div[1]/div/span/span";
-            wait.Until(wt => wt.FindElement(By.XPath(emailErrorXPath)));
-            string emailError = loginPage.getValueFromField(driver.FindElement(By.XPath(emailErrorXPath)));
+            loginPage.waitForEmailError();
+            string emailError = loginPage.getEmailError();
 
-            string passwordErrorXPath = "//*[@id='loginForm']/form/div[2]/div/span/span";
-            wait.Until(wt => wt.FindElement(By.XPath(passwordErrorXPath)));
-            string passwordError = loginPage.getValueFromField(driver.FindElement(By.XPath(passwordErrorXPath)));
+            loginPage.waitForPasswordError();
+            string passwordError = loginPage.getPasswordError();
 
             Assert.AreEqual("The Email field is required.", emailError);
             Assert.AreEqual("The Password field is required.", passwordError);          
@@ -67,30 +65,26 @@ namespace SKIT_Proekt
         public void EmptyEmail()
         {
             loginPage.login("", "Admin1*");
-            string emailErrorXPath = "//*[@id='loginForm']/form/div[1]/div/span/span";
-            wait.Until(wt => wt.FindElement(By.XPath(emailErrorXPath)));
-            string emailError = loginPage.getValueFromField(driver.FindElement(By.XPath(emailErrorXPath)));         
+            loginPage.waitForEmailError();
+            string emailError = loginPage.getEmailError();
             Assert.AreEqual("The Email field is required.", emailError);
         }
 
         [TestMethod]
         public void EmptyPassword()
         {
-            loginPage.login("admin@yahoo.com", "");            
-            string passwordErrorXPath = "//*[@id='loginForm']/form/div[2]/div/span/span";
-            wait.Until(wt => wt.FindElement(By.XPath(passwordErrorXPath)));
-            string passwordError = loginPage.getValueFromField(driver.FindElement(By.XPath(passwordErrorXPath)));
+            loginPage.login("admin@yahoo.com", "");
+            loginPage.waitForPasswordError();
+            string passwordError = loginPage.getPasswordError();
             Assert.AreEqual("The Password field is required.", passwordError);
         }
-
-        
+                
         [TestMethod]
         public void WrongEmail()
         {
             loginPage.login("admi@yahoo.com", "Admin1*");
-            string loginErrorXPath = "//*[@id='loginForm']/form/div[1]/ul/li";
-            wait.Until(wt => wt.FindElement(By.XPath(loginErrorXPath)));
-            string loginError = loginPage.getValueFromField(driver.FindElement(By.XPath(loginErrorXPath)));
+            loginPage.waitForError();
+            string loginError = loginPage.getError();
             Assert.AreEqual("Invalid login attempt.", loginError);
         }
 
@@ -98,9 +92,8 @@ namespace SKIT_Proekt
         public void WrongPassword()
         {
             loginPage.login("admin@yahoo.com", "Admin1");
-            string loginErrorXPath = "//*[@id='loginForm']/form/div[1]/ul/li";
-            wait.Until(wt => wt.FindElement(By.XPath(loginErrorXPath)));
-            string loginError = loginPage.getValueFromField(driver.FindElement(By.XPath(loginErrorXPath)));
+            loginPage.waitForError();
+            string loginError = loginPage.getError();
             Assert.AreEqual("Invalid login attempt.", loginError);
         }
     }
