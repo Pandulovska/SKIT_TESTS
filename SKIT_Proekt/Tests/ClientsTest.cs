@@ -12,7 +12,11 @@ namespace SKIT_Proekt.Tests {
     public class ClientsTest {
 
         ClientsPage page;
+        CreateClientPage createClientPage;
+        DetailsClientPage detailsClientPage;
+        EditClientPage editClientPage;
         LoginPage loginPage;
+        TicketsPage ticketsPage;
         IWebDriver driver;
         WebDriverWait wait;
 
@@ -62,8 +66,10 @@ namespace SKIT_Proekt.Tests {
         [TestMethod]
         public void clickEditOnAdminRow() {
             page.clickEditInRow(1);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            Assert.AreEqual("Edit", driver.FindElement(By.TagName("h2")).Text);
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            string text = editClientPage.getHeaderText();
+            Assert.AreEqual("Edit", text);
         }
 
         //
@@ -72,8 +78,10 @@ namespace SKIT_Proekt.Tests {
         [TestMethod]
         public void clickDetailsOnAdminRow() {
             page.clickDetailsInRow(1);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            Assert.AreEqual("Details about the client", driver.FindElement(By.TagName("h2")).Text);
+            detailsClientPage = new DetailsClientPage(driver);
+            detailsClientPage.waitForHeader();
+            string text = detailsClientPage.getHeaderText();
+            Assert.AreEqual("Details about the client", text);
         }
 
         //
@@ -84,7 +92,8 @@ namespace SKIT_Proekt.Tests {
         public void properDetailsDisplayTest() {
             string adminEmail = page.getFieldFromRow(page.getTableRow(1), 1);
             page.clickDetailsInRow(1);
-            string detailsEmail = driver.FindElement(By.XPath("/html/body/div[2]/div/dl[1]/dd[1]")).Text;
+            detailsClientPage = new DetailsClientPage(driver);
+            string detailsEmail = detailsClientPage.getEmail();
             Assert.AreEqual(adminEmail, detailsEmail);
         }
 
@@ -94,8 +103,9 @@ namespace SKIT_Proekt.Tests {
         [TestMethod]
         public void createClientGetTest() {
             page.clickCreateButton();
-            string titleText = driver.FindElement(By.TagName("h2")).Text;
-            Assert.AreEqual("Add client", titleText);
+            createClientPage = new CreateClientPage(driver);
+            string headerText = createClientPage.getHeaderText();
+            Assert.AreEqual("Add client", headerText);
         }
 
         //Considered only the happy path scenario, because the other scenarios are already part of RegisterTest
@@ -104,16 +114,12 @@ namespace SKIT_Proekt.Tests {
         [TestMethod]
         public void createClientPostTest() {
             page.clickCreateButton();
-            driver.FindElement(By.Id("Email")).SendKeys("damjan@test.com");
-            driver.FindElement(By.Id("Password")).SendKeys("Damjan1*");
-            driver.FindElement(By.Id("ConfirmPassword")).SendKeys("Damjan1*");
-            driver.FindElement(By.Id("create")).Click();
-            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            createClientPage = new CreateClientPage(driver);
+            createClientPage.createClient("damjan@test.com", "Damjan1*", "Damjan1*");
+            page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(3), 1);
             Assert.AreEqual("damjan@test.com", newClientEmail);
         }
-
-
 
         //Edit admin
         [Priority(7)]
@@ -121,10 +127,11 @@ namespace SKIT_Proekt.Tests {
         public void editAdminWithEmptyParams()
         {
             page.clickEditInRow(2);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("");
-            wait.Until(wt => wt.FindElement(By.Id("nameError")));
-            var nameError = driver.FindElement(By.Id("nameError")).Text;
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("");
+            editClientPage.waitForNameError();
+            var nameError = editClientPage.getNameErrorText();
             Assert.AreEqual("The Email field is required.", nameError);
         }
 
@@ -134,9 +141,11 @@ namespace SKIT_Proekt.Tests {
         public void editAdminAndLogIn()
         {
             page.clickEditInRow(2);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("adminn@yahoo.com");
-            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("adminn@yahoo.com");
+
+            page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(2), 1);
             page.clickOnLogOutButton();
             wait.Until(wt => wt.FindElement(By.LinkText("Login")));
@@ -145,9 +154,8 @@ namespace SKIT_Proekt.Tests {
             loginPage = new LoginPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
             loginPage.login("admin@yahoo.com", "Admin1*");
-            string loginErrorXPath = "//*[@id='loginForm']/form/div[1]/ul/li";
-            wait.Until(wt => wt.FindElement(By.XPath(loginErrorXPath)));
-            string loginError = loginPage.getValueFromField(driver.FindElement(By.XPath(loginErrorXPath)));
+            loginPage.waitForError();
+            string loginError = loginPage.getError();
             Assert.AreEqual("Invalid login attempt.", loginError);
 
             loginPage.login("adminn@yahoo.com", "Admin1*");
@@ -160,11 +168,12 @@ namespace SKIT_Proekt.Tests {
         public void editAdminEmail()
         {
             page.clickEditInRow(2);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("admin@yahoo.com");
-            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("adminn@yahoo.com");
+            page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(2), 1);
-            Assert.AreEqual("admin@yahoo.com", newClientEmail);
+            Assert.AreEqual("adminn@yahoo.com", newClientEmail);
         } 
         
        
@@ -174,10 +183,11 @@ namespace SKIT_Proekt.Tests {
         public void editUserWithEmptyParams()
         {
             page.clickEditInRow(3);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("");
-            wait.Until(wt => wt.FindElement(By.Id("nameError")));
-            var nameError = driver.FindElement(By.Id("nameError")).Text;
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("");
+            editClientPage.waitForNameError();
+            var nameError = editClientPage.getNameErrorText();
             Assert.AreEqual("The Email field is required.", nameError);
         }
 
@@ -187,9 +197,10 @@ namespace SKIT_Proekt.Tests {
         {
        
             page.clickEditInRow(3);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("damjann@test.com");
-            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("damjann@test.com");
+            page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(3), 1);
             page.clickOnLogOutButton();
             wait.Until(wt => wt.FindElement(By.LinkText("Login")));
@@ -198,9 +209,8 @@ namespace SKIT_Proekt.Tests {
             loginPage = new LoginPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
             loginPage.login("damjan@test.com", "Damjan1*");
-            string loginErrorXPath = "//*[@id='loginForm']/form/div[1]/ul/li";
-            wait.Until(wt => wt.FindElement(By.XPath(loginErrorXPath)));
-            string loginError = loginPage.getValueFromField(driver.FindElement(By.XPath(loginErrorXPath)));
+            loginPage.waitForError();
+            string loginError = loginPage.getError();
             Assert.AreEqual("Invalid login attempt.", loginError);
 
             loginPage.login("damjann@test.com", "Damjan1*");
@@ -212,9 +222,10 @@ namespace SKIT_Proekt.Tests {
         public void editUserEmail()
         {
             page.clickEditInRow(3);
-            wait.Until(wt => wt.FindElement(By.TagName("h2")));
-            page.editEmail("damjan@test.com");
-            wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+            editClientPage = new EditClientPage(driver);
+            editClientPage.waitForHeader();
+            editClientPage.editEmail("damjan@test.com");
+            page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(3), 1);
             Assert.AreEqual("damjan@test.com", newClientEmail);
         }
@@ -243,15 +254,12 @@ namespace SKIT_Proekt.Tests {
             wait.Until(wt => wt.FindElement(By.LinkText("Login")));
             page.clickOnLogInButton();
             loginPage.login("user1@yahoo.com", "User1*");
-            driver.FindElement(By.LinkText("MY TICKETS")).Click();            
-            ReadOnlyCollection<IWebElement> tickets = driver.FindElements(By.ClassName("ticket"));
-            string firstTicket = tickets[0].Text;
+            driver.FindElement(By.LinkText("MY TICKETS")).Click();
+            ticketsPage = new TicketsPage(driver);
+            ReadOnlyCollection<IWebElement> tickets = ticketsPage.getTickets();
+            string firstTicket = tickets[2].Text;
             string firstTicketText= "Ticket number: 23\r\nMovie: Deadpool 2\r\nDate: 25-09-2018\r\nTime: 16:00\r\nID: 23\r\nNumber of tickets: 1";
             Assert.AreEqual(firstTicketText, firstTicket);
-            string secondTicket = tickets[1].Text;
-            string secondTicketText = "Ticket number: 40\r\nMovie: Avengers: Infinity War\r\nDate: 12-09-2019\r\nTime: 16:00\r\nID: 40\r\nNumber of tickets: 1";
-            Assert.AreEqual(secondTicketText, secondTicket);
-
         }
     }
 

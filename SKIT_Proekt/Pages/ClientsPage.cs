@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,33 +10,21 @@ namespace SKIT_Proekt.Pages {
     class ClientsPage {
 
         IWebDriver driver;
+        WebDriverWait wait;
         By table = By.Id("clientsTable");
         By createButton = By.Id("create");
-        By Email = By.Id("email");
-        By editBtn = By.Id("editBtn");
         By deleteBtn = By.Id("deleteBtn");
         By LogOutBtn = By.Id("logout");
         By LogInBtn = By.LinkText("Login");
 
         public ClientsPage(IWebDriver driver) {
             this.driver = driver;
+            wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
         }
 
-        public void typeEmail(string email)
+        public void waitForClientsTable()
         {
-            driver.FindElement(Email).Clear();
-            driver.FindElement(Email).SendKeys(email);
-        }
-             
-        public void clickEditBtn()
-        {
-            driver.FindElement(editBtn).Click();
-        }
-
-        public void editEmail(string email)
-        {
-            typeEmail(email);
-            clickEditBtn();
+            wait.Until(wt => wt.FindElement(table));
         }
 
         public void clickCreateButton() {

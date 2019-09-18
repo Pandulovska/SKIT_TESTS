@@ -64,12 +64,16 @@
     <Compile Include="Pages\BestFilmsPage.cs" />
     <Compile Include="Pages\ClientsPage.cs" />
     <Compile Include="Pages\ChangePasswordPage.cs" />
+    <Compile Include="Pages\CreateClientPage.cs" />
+    <Compile Include="Pages\DetailsClientPage.cs" />
+    <Compile Include="Pages\EditClientPage.cs" />
     <Compile Include="Pages\FilmsPage.cs" />
     <Compile Include="Pages\LoginPage.cs" />
     <Compile Include="Pages\ManagePage.cs" />
     <Compile Include="Pages\RegisterPage.cs" />
     <Compile Include="Pages\SoonFilmsPage.cs" />
     <Compile Include="Pages\DetailsPage.cs" />
+    <Compile Include="Pages\TicketsPage.cs" />
     <Compile Include="Tests\FilmsTest.cs" />
     <Compile Include="Tests\ManageAdminTest.cs" />
     <Compile Include="Tests\LoginTest.cs" />
