@@ -46,8 +46,8 @@ namespace SKIT_Proekt
         public void EmptyFields()
         {
             changePasswordPage.changePassword("", "", "");
-            string currentPasswordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
-            string newPasswordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[2]")).Text;
+            string currentPasswordError = changePasswordPage.getCurrentPasswordValidationMessage();
+            string newPasswordError = changePasswordPage.getNewPasswordValidationMessage();
             Assert.AreEqual("The Current password field is required.", currentPasswordError);
             Assert.AreEqual("The New password field is required.", newPasswordError);
         }
@@ -57,7 +57,7 @@ namespace SKIT_Proekt
         public void EmptyNewAndConfirmPassword()
         {
             changePasswordPage.changePassword("User1*", "", "");
-            string newPasswordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
+            string newPasswordError = changePasswordPage.getCurrentPasswordValidationMessage();
             Assert.AreEqual("The New password field is required.", newPasswordError);
 
         }
@@ -67,8 +67,8 @@ namespace SKIT_Proekt
         public void EmptyNewPassword()
         {
             changePasswordPage.changePassword("User1*", "", "123");
-            string newPasswordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
-            string differentPasswordsError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[2]")).Text;
+            string newPasswordError = changePasswordPage.getCurrentPasswordValidationMessage();
+            string differentPasswordsError = changePasswordPage.getNewPasswordValidationMessage();
             Assert.AreEqual("The New password field is required.", newPasswordError);
             Assert.AreEqual("The new password and confirmation password do not match.", differentPasswordsError);
         }
@@ -78,8 +78,8 @@ namespace SKIT_Proekt
         public void EmptyConfirmNewPassword()
         {
             changePasswordPage.changePassword("User1*", "123", "");
-            string newPasswordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
-            string differentPasswordsError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[2]")).Text;
+            string newPasswordError = changePasswordPage.getCurrentPasswordValidationMessage();
+            string differentPasswordsError = changePasswordPage.getNewPasswordValidationMessage();
             Assert.AreEqual("The New password must be at least 6 characters long.", newPasswordError);
             Assert.AreEqual("The new password and confirmation password do not match.", differentPasswordsError);
         }
@@ -89,7 +89,7 @@ namespace SKIT_Proekt
         public void IncorrectPasswordFormat()
         {
             changePasswordPage.changePassword("User1*", "User11", "User11");
-            string error = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
+            string error = changePasswordPage.getCurrentPasswordValidationMessage();
             Assert.AreEqual("Passwords must have at least one non letter or digit character.", error);
         }
 
@@ -98,7 +98,7 @@ namespace SKIT_Proekt
         public void invalidFormatOnlyLowerCase()
         {
             changePasswordPage.changePassword("User1*", "newuser", "newuser");
-            string passwordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li")).Text;
+            string passwordError = changePasswordPage.getPasswordValidationMessage();
             string expectedMessage = "Passwords must have at least one non letter or digit character." +
                 " Passwords must have at least one digit ('0'-'9'). Passwords must have at least" +
                 " one uppercase ('A'-'Z').";
@@ -110,7 +110,7 @@ namespace SKIT_Proekt
         public void invalidFormatOnlyUpperCase()
         {
             changePasswordPage.changePassword("User1*", "NEWUSER", "NEWUSER");
-            string passwordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li")).Text;
+            string passwordError = changePasswordPage.getPasswordValidationMessage();
             string expectedMessage = "Passwords must have at least one non letter or digit character." +
                 " Passwords must have at least one digit ('0'-'9'). Passwords must have at least" +
                 " one lowercase ('a'-'z').";
@@ -122,7 +122,7 @@ namespace SKIT_Proekt
         public void invalidFormatMissingDigitAndSpecialCharacter()
         {
             changePasswordPage.changePassword("User1*", "NewUser", "NewUser");
-            string passwordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li")).Text;
+            string passwordError = changePasswordPage.getPasswordValidationMessage();
             string expectedMessage = "Passwords must have at least one non letter or digit character." +
                 " Passwords must have at least one digit ('0'-'9').";
             Assert.AreEqual(expectedMessage, passwordError);
@@ -133,7 +133,7 @@ namespace SKIT_Proekt
         public void invalidFormatMissingDigit()
         {
             changePasswordPage.changePassword("User1*", "Userr!", "Userr!");
-            string passwordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li")).Text;
+            string passwordError = changePasswordPage.getPasswordValidationMessage();
             string expectedMessage = "Passwords must have at least one digit ('0'-'9').";
             Assert.AreEqual(expectedMessage, passwordError);
         }
@@ -143,7 +143,7 @@ namespace SKIT_Proekt
         public void invalidFormatMissingSpecialCharacter()
         {
             changePasswordPage.changePassword("User1*", "Userr1", "Userr1");
-            string passwordError = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li")).Text;
+            string passwordError = changePasswordPage.getPasswordValidationMessage();
             string expectedMessage = "Passwords must have at least one non letter or digit character.";
             Assert.AreEqual(expectedMessage, passwordError);
         }
@@ -153,7 +153,7 @@ namespace SKIT_Proekt
         public void DifferentPasswords()
         {
             changePasswordPage.changePassword("User1*", "User11!", "User11");
-            string error = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
+            string error = changePasswordPage.getCurrentPasswordValidationMessage();
             Assert.AreEqual("The new password and confirmation password do not match.", error);
         }
 
@@ -162,7 +162,7 @@ namespace SKIT_Proekt
         public void IncorrectOldPassword()
         {
             changePasswordPage.changePassword("user1*", "User11!", "User11!");
-            string error = changePasswordPage.getValidationMessages().FindElement(By.XPath("./ul/li[1]")).Text;
+            string error = changePasswordPage.getCurrentPasswordValidationMessage();
             Assert.AreEqual("Incorrect password.", error);
         }
 
@@ -181,9 +181,8 @@ namespace SKIT_Proekt
             loginPage = new LoginPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
             loginPage.login("user1@yahoo.com", "User1*");
-            string loginErrorXPath = "//*[@id='loginForm']/form/div[1]/ul/li";
-            wait.Until(wt => wt.FindElement(By.XPath(loginErrorXPath)));
-            string loginError = loginPage.getValueFromField(driver.FindElement(By.XPath(loginErrorXPath)));
+            loginPage.waitForError();
+            string loginError = loginPage.getError();
             Assert.AreEqual("Invalid login attempt.", loginError);
 
             loginPage.login("user1@yahoo.com", "User1!");

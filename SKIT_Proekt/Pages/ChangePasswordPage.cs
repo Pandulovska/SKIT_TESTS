@@ -46,6 +46,20 @@ namespace SKIT_Proekt.Pages
             return driver.FindElement(Validation);
         }
 
-     
+        public string getCurrentPasswordValidationMessage()
+        {
+            return driver.FindElement(Validation).FindElement(By.XPath("./ul/li[1]")).Text; 
+        }
+
+        public string getNewPasswordValidationMessage()
+        {
+            return driver.FindElement(Validation).FindElement(By.XPath("./ul/li[2]")).Text;
+        }
+
+        public string getPasswordValidationMessage()
+        {
+            return driver.FindElement(Validation).FindElement(By.XPath("./ul/li")).Text;
+        }
+
     }
 }
