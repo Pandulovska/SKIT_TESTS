@@ -149,21 +149,18 @@ namespace SKIT_Proekt.Tests {
             page.register("test@test.com", "Test1!","Test1!");
             page.logout();
             
-            string loginURL = "http://localhost:49683/Account/Login";
+            driver.FindElement(By.LinkText("Login")).Click();
             loginPage = new LoginPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
             //Navigate to the Login page and login as admin
-            driver.Navigate().GoToUrl(loginURL);
             loginPage.login("admin@yahoo.com", "Admin1*");
             wait.Until(wt => wt.FindElement(By.LinkText("admin@yahoo.com")));
 
-            string clientsURL = "http://localhost:49683/Clients";
+            driver.FindElement(By.LinkText("CLIENTS")).Click();
             ClientsPage clientsPage = new ClientsPage(driver);
             wait = new WebDriverWait(driver, new TimeSpan(0, 0, 5));
-            //Navigate to the Login page and login as admin
-            driver.Navigate().GoToUrl(clientsURL);
-
             wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
+
             int numberRows = clientsPage.countRows();
             clientsPage.deleteUserWithEmail("test@test.com");
             IAlert alert = driver.SwitchTo().Alert();

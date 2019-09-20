@@ -45,7 +45,7 @@ namespace SKIT_Proekt.Pages
 
         public string getNumberVisitorsByIndexFromTable(IWebElement table, int index)
         {
-            string xpath = string.Format("./tbody/tr/td[{0}]/b", index);
+            string xpath = string.Format("./tbody/tr/td[{0}]/div/b", index);
             return table.FindElement(By.XPath(xpath)).Text;
         }
     }

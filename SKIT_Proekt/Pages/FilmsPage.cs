@@ -116,5 +116,10 @@ namespace SKIT_Proekt.Pages
                                     .FindElement(By.XPath("./button"));
             deleteButton.Click();
         }
+
+        public string getFilmName(int number)
+        {
+           return getAdminTableRow(number).FindElement(By.XPath("./td[1]/h4")).Text;
+        }
     }
 }

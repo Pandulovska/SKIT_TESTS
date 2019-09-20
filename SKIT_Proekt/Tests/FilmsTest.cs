@@ -13,6 +13,7 @@ namespace SKIT_Proekt.Tests
     public class FilmsTest
     {
         FilmsPage filmsPage;
+        CreateFilmPage createFilmPage;
         LoginPage loginPage;
         RegisterPage registerPage;
         ArchivedFilmsPage archivedFilmsPage;
@@ -21,6 +22,8 @@ namespace SKIT_Proekt.Tests
         ClientsPage clientsPage;
         DetailsPage detailsPage;
         AddClientToMoviePage addClientToMoviePage;
+        EditFilmPage editFilmPage;
+
         IWebDriver driver;
         WebDriverWait wait;
 
@@ -70,7 +73,7 @@ namespace SKIT_Proekt.Tests
         {
             filmsPage.goToArchivedFilms();
             archivedFilmsPage = new ArchivedFilmsPage(driver);
-            Assert.AreEqual(archivedFilmsPage.countRows(),2);
+            Assert.IsTrue(archivedFilmsPage.countRows()>=2);
         }
 
         [Priority(4)]
@@ -104,7 +107,7 @@ namespace SKIT_Proekt.Tests
             bestFilmsPage.clickRatingButton();
             IWebElement ratingSortedTable = bestFilmsPage.getRatingSortedTable();
             string firstMovieName = bestFilmsPage.getMovieTitleByIndexFromTable(ratingSortedTable, 1);
-            Assert.AreEqual("Black Panther", firstMovieName);
+            Assert.AreEqual("Avengers: Infinity War", firstMovieName);
         }
 
         //GET Test - Films/BestMovies -> sort by Visitors
@@ -116,8 +119,8 @@ namespace SKIT_Proekt.Tests
             bestFilmsPage = new BestFilmsPage(driver);
             bestFilmsPage.clickVisitorsButton();
             IWebElement visitorSortedTable = bestFilmsPage.getVisitorSortedTable();
-            string numberVisitors = bestFilmsPage.getNumberVisitorsByIndexFromTable(visitorSortedTable, 2);
-            Assert.AreEqual("Visitors: 13", numberVisitors);
+            string numberVisitors = bestFilmsPage.getNumberVisitorsByIndexFromTable(visitorSortedTable, 3);
+            Assert.AreEqual("Visitors: 9", numberVisitors);
         }
 
         //
@@ -128,7 +131,8 @@ namespace SKIT_Proekt.Tests
         {
             adminLogin();
             filmsPage.adminClickEditInRow(1);
-            string movieName = driver.FindElement(By.Id("Name")).GetAttribute("value");
+            editFilmPage = new EditFilmPage(driver);
+            string movieName = editFilmPage.getFilmName();
             Assert.AreEqual("A Ghost Story", movieName);
         }
 
@@ -139,32 +143,24 @@ namespace SKIT_Proekt.Tests
         public void editFirstMovieFailingTest() {
             adminLogin();
             filmsPage.adminClickEditInRow(1);
-
-            driver.FindElement(By.Id("Name")).Clear();
-            driver.FindElement(By.Id("Url")).Clear();
-            driver.FindElement(By.Id("Genre")).Clear();
-            driver.FindElement(By.Id("Director")).Clear();
-            driver.FindElement(By.Id("ReleaseDate")).Clear();
-            driver.FindElement(By.Id("ShortDescription")).Clear();
-            driver.FindElement(By.Id("Stars")).Clear();
-            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
-            submitKey.Click();
+            editFilmPage = new EditFilmPage(driver);
+            editFilmPage.emptyNameField();
+            editFilmPage.emptyUrlField();
+            editFilmPage.emptyGenreField();
+            editFilmPage.emptyDirectorField();
+            editFilmPage.emptyReleaseDateField();
+            editFilmPage.emptyShortDescriptionField();
+            editFilmPage.emptyStarsField();
+            editFilmPage.clickSubmit();
 
             //check if the proper error messages are displayed
-            string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
-            string urlErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Url']")).Text;
-            string genreErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Genre']")).Text;
-            string directorErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Director']")).Text;
-            string releaseDateErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ReleaseDate']")).Text;
-            string shortDescriptionErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ShortDescription']")).Text;
-            string starsErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Stars']")).Text;
-            Assert.AreEqual("The Name field is required.", nameErrorMessage);
-            Assert.AreEqual("The Image field is required.", urlErrorMessage);
-            Assert.AreEqual("The Genre field is required.", genreErrorMessage);
-            Assert.AreEqual("The Director field is required.", directorErrorMessage);
-            Assert.AreEqual("The Release Date field is required.", releaseDateErrorMessage);
-            Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
-            Assert.AreEqual("The Stars field is required.", starsErrorMessage);
+            Assert.AreEqual("The Name field is required.", editFilmPage.getNameErrorMessage());
+            Assert.AreEqual("The Image field is required.", editFilmPage.getUrlErrorMessage());
+            Assert.AreEqual("The Genre field is required.", editFilmPage.getGenreErrorMessage());
+            Assert.AreEqual("The Director field is required.", editFilmPage.getDirectorErrorMessage());
+            Assert.AreEqual("The Release Date field is required.", editFilmPage.getReleaseDateErrorMessage());
+            Assert.AreEqual("The Short Description field is required.", editFilmPage.getShortDescriptionErrorMessage());
+            Assert.AreEqual("The Stars field is required.", editFilmPage.getStarsErrorMessage());
         }
         
         //
@@ -175,18 +171,15 @@ namespace SKIT_Proekt.Tests
         {
             adminLogin();
             filmsPage.adminClickEditInRow(1);
-            driver.FindElement(By.Id("Name")).Clear();
-            driver.FindElement(By.Id("Name")).SendKeys("A GGhost Story");
-            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
-            submitKey.Click();
-            string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
+            editFilmPage = new EditFilmPage(driver);
+            editFilmPage.enterName("A GGhost Story");
+            editFilmPage.clickSubmit();
+            string firstMovieName = filmsPage.getFilmName(1);
             Assert.AreEqual("A GGhost Story", firstMovieName);
 
             filmsPage.adminClickEditInRow(1);
-            driver.FindElement(By.Id("Name")).Clear();
-            driver.FindElement(By.Id("Name")).SendKeys("A Ghost Story");
-            submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
-            submitKey.Click();
+            editFilmPage.enterName("A Ghost Story");
+            editFilmPage.clickSubmit();
         }
 
         //GET Films/Create
@@ -196,7 +189,8 @@ namespace SKIT_Proekt.Tests
         {
             adminLogin();
             filmsPage.clickCreateButton();
-            string text = driver.FindElement(By.XPath("/html/body/h2")).Text;
+            createFilmPage = new CreateFilmPage(driver);
+            string text = createFilmPage.getTitle();
             Assert.AreEqual(text, "Add a new movie");
         }
 
@@ -207,31 +201,23 @@ namespace SKIT_Proekt.Tests
             adminLogin();
             filmsPage.clickCreateButton();
             //Sending empty strings to all fields
-            driver.FindElement(By.Id("Name")).SendKeys("");
-            driver.FindElement(By.Id("Url")).SendKeys("");
-            driver.FindElement(By.Id("Genre")).SendKeys("");
-            driver.FindElement(By.Id("Director")).SendKeys("");
-            driver.FindElement(By.Id("ReleaseDate")).SendKeys("");
-            driver.FindElement(By.Id("ShortDescription")).SendKeys("");
-            driver.FindElement(By.Id("Stars")).SendKeys("");
-            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
-            submitKey.Click();
+            createFilmPage = new CreateFilmPage(driver);
+            createFilmPage.emptyNameField();
+            createFilmPage.emptyUrlField();
+            createFilmPage.emptyGenreField();
+            createFilmPage.emptyDirectorField();
+            createFilmPage.emptyReleaseDateField();
+            createFilmPage.emptyShortDescriptionField();
+            createFilmPage.emptyStarsField();
+            createFilmPage.clickSubmit();
 
-            //check if the proper error messages are displayed
-            string nameErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Name']")).Text;
-            string urlErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Url']")).Text;
-            string genreErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Genre']")).Text;
-            string directorErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Director']")).Text;
-            string releaseDateErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ReleaseDate']")).Text;
-            string shortDescriptionErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='ShortDescription']")).Text;
-            string starsErrorMessage = driver.FindElement(By.XPath("//span[@data-valmsg-for='Stars']")).Text;
-            Assert.AreEqual("The Name field is required.", nameErrorMessage);
-            Assert.AreEqual("The Image field is required.", urlErrorMessage);
-            Assert.AreEqual("The Genre field is required.", genreErrorMessage);
-            Assert.AreEqual("The Director field is required.", directorErrorMessage);
-            Assert.AreEqual("The Release Date field is required.", releaseDateErrorMessage);
-            Assert.AreEqual("The Short Description field is required.", shortDescriptionErrorMessage);
-            Assert.AreEqual("The Stars field is required.", starsErrorMessage);
+            Assert.AreEqual("The Name field is required.", createFilmPage.getNameErrorMessage());
+            Assert.AreEqual("The Image field is required.", createFilmPage.getUrlErrorMessage());
+            Assert.AreEqual("The Genre field is required.", createFilmPage.getGenreErrorMessage());
+            Assert.AreEqual("The Director field is required.", createFilmPage.getDirectorErrorMessage());
+            Assert.AreEqual("The Release Date field is required.", createFilmPage.getReleaseDateErrorMessage());
+            Assert.AreEqual("The Short Description field is required.", createFilmPage.getShortDescriptionErrorMessage());
+            Assert.AreEqual("The Stars field is required.", createFilmPage.getStarsErrorMessage());
         }
        
         //POST Test - Films/Create
@@ -241,20 +227,19 @@ namespace SKIT_Proekt.Tests
         {
             adminLogin();
             filmsPage.clickCreateButton();
-
+            createFilmPage = new CreateFilmPage(driver);
             //fill out all the fields
-            driver.FindElement(By.Id("Name")).SendKeys("A");
-            driver.FindElement(By.Id("Url")).SendKeys("A");
-            driver.FindElement(By.Id("Genre")).SendKeys("A");
-            driver.FindElement(By.Id("Director")).SendKeys("A");
-            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
-            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
-            driver.FindElement(By.Id("Stars")).SendKeys("A");
+            createFilmPage.enterName("A Film");
+            createFilmPage.enterUrl("https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png");
+            createFilmPage.enterGenre("Comedy");
+            createFilmPage.enterDirector("Director1");
+            createFilmPage.enterReleaseDate("July 7, 2019 (United States)");
+            createFilmPage.enterShortDescription("Description");
+            createFilmPage.enterStars("Stars1, Stars2");
 
-            IWebElement submitKey = driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']"));
-            submitKey.Click();
-            string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
-            Assert.AreEqual("A", firstMovieName);
+            createFilmPage.clickSubmit();
+            string firstMovieName = filmsPage.getFilmName(1);
+            Assert.AreEqual("A Film", firstMovieName);
         }
 
         //
@@ -267,7 +252,7 @@ namespace SKIT_Proekt.Tests
             filmsPage.adminClickDeleteInRow(1);
             driver.SwitchTo().Alert().Accept();
             Thread.Sleep(500); //da ima vreme za da se izmeni tabelata
-            string firstMovieName = filmsPage.getAdminTableRow(1).FindElement(By.XPath("./td[1]/h4")).Text;
+            string firstMovieName = filmsPage.getFilmName(1);
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
 
@@ -306,8 +291,9 @@ namespace SKIT_Proekt.Tests
             FilmsPage filmsPage = new FilmsPage(driver);
 
             filmsPage.clickOnMovieToAccessDetailsFromPosition(5);
-            wait.Until(wt => wt.FindElement(By.XPath("/html/body/h2/u")));
-            string title = driver.FindElement(By.XPath("/html/body/h2/u")).Text;
+            detailsPage = new DetailsPage(driver);
+            detailsPage.waitForName();
+            string title = detailsPage.getName();
             Assert.AreEqual("Incredibles 2", title);
         }
 
@@ -328,9 +314,10 @@ namespace SKIT_Proekt.Tests
             detailsPage = new DetailsPage(driver);
             float oldRating = detailsPage.getRating();
             detailsPage.rateFilm(10);
+            Thread.Sleep(1000);
             Assert.AreEqual(detailsPage.getDoneMessage(), "Thank you for rating this movie!");
             detailsPage.rateFilm(6);
-            Thread.Sleep(2000);
+            Thread.Sleep(1000);
             Assert.AreEqual(detailsPage.getDoneMessage(), "You have already rated this movie!");
             float newRating = detailsPage.getRating();
             Assert.AreNotEqual(oldRating, newRating);    
@@ -343,8 +330,7 @@ namespace SKIT_Proekt.Tests
             loginPage = new LoginPage(driver);
             loginPage.login("admin2@yahoo.com", "Admin2*");
             wait.Until(wt => wt.FindElement(By.LinkText("admin2@yahoo.com")));
-            string pageURL = "http://localhost:49683/Clients/";
-            driver.Navigate().GoToUrl(pageURL);
+            driver.FindElement(By.LinkText("CLIENTS")).Click();
             clientsPage = new ClientsPage(driver);
             wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
             int numberRows = clientsPage.countRows();
@@ -448,17 +434,16 @@ namespace SKIT_Proekt.Tests
 
             adminLogin();
             filmsPage.clickCreateButton();
-
+            createFilmPage = new CreateFilmPage(driver);
             //fill out all the fields
-            driver.FindElement(By.Id("Name")).SendKeys("A");
-            driver.FindElement(By.Id("Url")).SendKeys("A");
-            driver.FindElement(By.Id("Genre")).SendKeys("A");
-            driver.FindElement(By.Id("Director")).SendKeys("A");
-            driver.FindElement(By.Id("ReleaseDate")).SendKeys("A");
-            driver.FindElement(By.Id("ShortDescription")).SendKeys("A");
-            driver.FindElement(By.Id("Stars")).SendKeys("A");
-
-            driver.FindElement(By.XPath("//input[@class='btn btn-success btn-block']")).Click();
+            createFilmPage.enterName("A");
+            createFilmPage.enterUrl("A");
+            createFilmPage.enterGenre("A");
+            createFilmPage.enterDirector("A");
+            createFilmPage.enterReleaseDate("A");
+            createFilmPage.enterShortDescription("A");
+            createFilmPage.enterStars("A");
+            createFilmPage.clickSubmit();
             string firstMovieName = filmsPage.getFilmNameFromPosition(1);
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
