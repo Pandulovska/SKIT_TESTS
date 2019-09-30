@@ -170,10 +170,11 @@ namespace SKIT_Proekt.Tests {
             page.clickEditInRow(2);
             editClientPage = new EditClientPage(driver);
             editClientPage.waitForHeader();
-            editClientPage.editEmail("adminn@yahoo.com");
+            editClientPage.editEmail("admin@yahoo.com");
             page.waitForClientsTable();
             string newClientEmail = page.getFieldFromRow(page.getTableRow(2), 1);
-            Assert.AreEqual("adminn@yahoo.com", newClientEmail);
+            Assert.AreEqual("admin@yahoo.com", newClientEmail);
+
         } 
         
        

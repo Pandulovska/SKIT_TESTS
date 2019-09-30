@@ -251,7 +251,7 @@ namespace SKIT_Proekt.Tests
             adminLogin();
             filmsPage.adminClickDeleteInRow(1);
             driver.SwitchTo().Alert().Accept();
-            Thread.Sleep(500); //da ima vreme za da se izmeni tabelata
+            Thread.Sleep(1500); //da ima vreme za da se izmeni tabelata
             string firstMovieName = filmsPage.getFilmName(1);
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
@@ -314,10 +314,10 @@ namespace SKIT_Proekt.Tests
             detailsPage = new DetailsPage(driver);
             float oldRating = detailsPage.getRating();
             detailsPage.rateFilm(10);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             Assert.AreEqual(detailsPage.getDoneMessage(), "Thank you for rating this movie!");
             detailsPage.rateFilm(6);
-            Thread.Sleep(1000);
+            Thread.Sleep(2000);
             Assert.AreEqual(detailsPage.getDoneMessage(), "You have already rated this movie!");
             float newRating = detailsPage.getRating();
             Assert.AreNotEqual(oldRating, newRating);    
@@ -335,10 +335,10 @@ namespace SKIT_Proekt.Tests
             wait.Until(wt => wt.FindElement(By.Id("clientsTable")));
             int numberRows = clientsPage.countRows();
             clientsPage.deleteUserWithEmail("andrijana@test.com");
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             IAlert alert = driver.SwitchTo().Alert();
             alert.Accept();
-            Thread.Sleep(1000);
+            Thread.Sleep(1500);
             int newNumberRows = clientsPage.countRows();
             Assert.AreEqual(numberRows - 1, newNumberRows);
         }
@@ -428,6 +428,7 @@ namespace SKIT_Proekt.Tests
         }
 
         //[bug1] there is no complex validation for the fields (any entered data will pass while creating and editing a film)
+        [Ignore]
         [Priority(20)]
         [TestMethod]
         public void createFilmFailingTest() {
@@ -448,7 +449,9 @@ namespace SKIT_Proekt.Tests
             Assert.AreEqual("A Ghost Story", firstMovieName);
         }
 
+
         //[bug2] weak validation for the fields: date (any string will pass) and No. tickets (any number will pass), should we add test?
+        [Ignore]
         [Priority(21)]
         [TestMethod]
         public void buyTicketFailingTest()

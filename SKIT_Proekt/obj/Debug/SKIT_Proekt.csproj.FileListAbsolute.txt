@@ -58,3 +58,8 @@ C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_TESTS\SKIT_Proekt\obj\Debug\SKIT_Proekt.
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_TESTS\SKIT_Proekt\obj\Debug\SKIT_Proekt.csproj.CopyComplete
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_TESTS\SKIT_Proekt\obj\Debug\SKIT_Proekt.dll
 C:\Users\andri\Desktop\SKIT_PROEKT\SKIT_TESTS\SKIT_Proekt\obj\Debug\SKIT_Proekt.pdb
+C:\Users\andri\AppData\Local\Temp\MutationTesting\CopyFiles\Microsoft.VisualStudio.TestPlatform.MSTest.TestAdapter.dll
+C:\Users\andri\AppData\Local\Temp\MutationTesting\CopyFiles\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.Interface.dll
+C:\Users\andri\AppData\Local\Temp\MutationTesting\CopyFiles\Microsoft.VisualStudio.TestPlatform.MSTestAdapter.PlatformServices.dll
+C:\Users\andri\AppData\Local\Temp\MutationTesting\CopyFiles\SKIT_Proekt.dll
+C:\Users\andri\AppData\Local\Temp\MutationTesting\CopyFiles\SKIT_Proekt.pdb
